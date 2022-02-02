@@ -1,3 +1,4 @@
+
 package com.crudv2.crudSpring.service;
 
 import com.crudv2.crudSpring.entity.Form;
@@ -25,15 +26,19 @@ public class PersonaImagen {
         return new ModelMapper();
     }
 
-    public Persona savePersona(Form form) {
-        Persona persona = modelMapper.map(form, Persona.class);
-        Persona persona2 = personaService.savePersona(persona);
-        Integer i = persona2.getId();
-        Imagen I = new Imagen();
-        I.setImagen(form.getImagen());
-        I.setIdPersona(i.toString());
-        imagenService.agregar(I);
-        return persona;
+    public int savePersona(Form form) {
+        try{
+            Persona persona = modelMapper.map(form, Persona.class);
+            Persona persona2 = personaService.savePersona(persona);
+            Integer i = persona2.getId();
+            Imagen I = new Imagen();
+            I.setImagen(form.getImagen());
+            I.setIdPersona(i.toString());
+            imagenService.agregar(I);
+            return 1;
+        } catch (Exception e){
+            return  0;
+        }
 
     }
     public List<Persona> getPersonas() { return personaService.getPersonas();
@@ -47,22 +52,30 @@ public class PersonaImagen {
         return personaService.getPersonaByName(name);
     }
 
-    public String deletePersona(int id) {
-        Integer i = id;
-        personaService.deletePersona(id);
-        imagenService.delete(i.toString());
-        return "" + id;
+
+    public Persona getPersonaByIdNum(String id) {
+        return personaService.getPersonaByIdNum(id);
     }
 
-    public Persona updatePersona(Form form) {
-        Persona persona = modelMapper.map(form, Persona.class);
-        Persona persona2 = personaService.updatePersona(persona);
-        Integer i = persona2.getId();
-        Imagen I = new Imagen();
-        I.setImagen(form.getImagen());
-        I.setIdPersona(i.toString());
-        imagenService.editar(I);
-        return persona;
+    public int deletePersona(Persona persona) {
+        Integer i = persona.getId();
+        personaService.deletePersona(persona);
+        Imagen I = imagenService.listImagenIdPersona(i.toString());
+        return imagenService.delete(I);
+    }
+
+    public int updatePersona(Form form) {
+        try {
+            Persona persona = modelMapper.map(form, Persona.class);
+            Persona persona2 = personaService.updatePersona(persona);
+            Integer i = persona2.getId();
+            Imagen I = imagenService.listImagenIdPersona(i.toString());
+            I.setImagen(form.getImagen());
+            imagenService.editar(I);
+            return 1;
+        } catch (Exception  e){
+            return 0;
+        }
     }
 
 

@@ -5,8 +5,8 @@ import com.crudv2.crudSpring.entity.Imagen;
 public interface IImagenService {
     public List<Imagen> listar();
     public Imagen listImagenId(String id);
-    public void agregar(Imagen I);
-    public void editar(Imagen I);
-    public void delete(String id);
+    public Imagen agregar(Imagen I);
+    public Imagen editar(Imagen I);
+    public int delete(Imagen imagen);
     public Imagen listImagenIdPersona(String id);
 }

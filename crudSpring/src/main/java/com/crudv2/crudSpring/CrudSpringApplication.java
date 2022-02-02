@@ -20,13 +20,7 @@ public class CrudSpringApplication  implements CommandLineRunner {
 
 	}
 	@Override
-	public void run(String... args) throws Exception {
-		//System.out.println("Data creation started...");
-		//imgRepo.save(new Imagen("1","Whole Wheat Biscuit", "15", "snacks"));
-		//imgRepo.save(new Imagen("2","XYZ Kodo Millet healthy", "2", "millets"));
-		//System.out.println("Data creation complete...");
-
-	}
+	public void run(String... args) throws Exception {}
 
 
 

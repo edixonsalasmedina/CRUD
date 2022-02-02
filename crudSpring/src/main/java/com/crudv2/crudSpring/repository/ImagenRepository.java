@@ -19,6 +19,8 @@ public interface ImagenRepository  extends MongoRepository<Imagen, String> {
     List<Imagen> findAll(String url);
 
     public long count();
+    int deleteImagenByIdPersona(String idPersona);
+    Long deleteImagenById(String id);
 
 
 

@@ -6,11 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-
-
-
-
+//UPDATE
 @Service
 public class PersonaService {
     @Autowired
@@ -29,14 +25,16 @@ public class PersonaService {
     public Persona getPersonaById(int id) {
         return repository.findById(id).orElse(null);
     }
+    public Persona getPersonaByIdNum(String id) {
+        return repository.findByIdNum(id);
+    }
 
     public Persona getPersonaByName(String name) {
         return repository.findByName(name);
     }
 
-    public String deletePersona(int id) {
-        repository.deleteById(id);
-        return "" + id;
+    public void deletePersona(Persona persona) {
+        repository.deleteById(persona.getId());
     }
 
     public Persona updatePersona(Persona persona) {

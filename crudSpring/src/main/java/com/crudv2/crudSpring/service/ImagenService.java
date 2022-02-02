@@ -33,19 +33,21 @@ public class ImagenService implements IImagenService{
         return res;
     }
     @Override
-    public void agregar(Imagen I) {
-        imgRepo.save(I);
+    public Imagen agregar(Imagen I) {
+        return imgRepo.save(I);
     }
     @Override
-    public void editar(Imagen I) {
-        Imagen I2 = listImagenIdPersona(I.getIdPersona());
-        imgRepo.deleteById(I2.getId());
-        imgRepo.save(I);
+    public Imagen editar(Imagen I) {
+        //Imagen I2 = listImagenIdPersona(I.getIdPersona());
+        //imgRepo.deleteById(I2.getId());
+
+        return imgRepo.save(I);
     }
     @Override
-    public void delete(String id) {
-        Imagen I = listImagenIdPersona(id);
-        imgRepo.deleteById(I.getId());
+    public int delete(Imagen imagen) {
+        //Imagen I = listImagenIdPersona(id);
+        int res = imgRepo.deleteImagenByIdPersona(imagen.getIdPersona());
+        return res;
 
 
     }
