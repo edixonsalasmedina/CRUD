@@ -1,3 +1,4 @@
+/*
 package com.crudv2.crudSpring.controller;
 
 import com.crudv2.crudSpring.entity.AnswerData;
@@ -143,3 +144,5 @@ class PersonaControllerTest {
         assertEquals(406, personaController.deletePersona(persona).getStatusCodeValue());
     }
 }
+
+ */
