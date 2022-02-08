@@ -1,4 +1,4 @@
-/*
+
 package com.crudv2.crudSpring.service;
 
 import com.crudv2.crudSpring.entity.Form;
@@ -12,9 +12,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpRange;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -57,12 +59,12 @@ class PersonaImagenTest {
         when(personaService.savePersona(persona)).thenReturn(persona);
         when(personaRepository.save(persona)).thenReturn(persona);
         when(personaService.getPersonas()).thenReturn(Arrays.asList(persona));
-        when(personaService.getPersonas()).thenReturn(Arrays.asList(persona));
+
         when(personaRepository.findAll()).thenReturn(Arrays.asList(persona));
         when(personaService.getPersonaById(persona.getId())).thenReturn(persona);
         when(personaRepository.findById(persona.getId())).thenReturn(Optional.ofNullable(persona));
         when(personaRepository.findByName(persona.getName())).thenReturn(persona);
-        when(personaService.getPersonaByName(persona.getName())).thenReturn(persona);
+        when(personaImagenService.getPersonaByIdNum(persona.getIdNum())).thenReturn(persona);
         //when(personaService.deletePersona(persona)).thenReturn(num);
         when(imagenService.listImagenIdPersona(i.toString())).thenReturn(I);
         when(imagenService.delete(I)).thenReturn(1);
@@ -79,39 +81,59 @@ class PersonaImagenTest {
 
     @Test
     void savePersona() {
-        int actual = personaImagenService.savePersona(form);
-        assertEquals(actual, 1);
+        when(personaImagenService.getPersonaByIdNum(form.getIdNum())).thenReturn(persona);
+        ResponseEntity<Object> actual = personaImagenService.savePersona(form);
+        assertEquals(HttpStatus.NOT_ACCEPTABLE, actual.getStatusCode());
+
+        when(personaImagenService.getPersonaByIdNum(form.getIdNum())).thenReturn(null);
+        actual = personaImagenService.savePersona(form);
+        assertEquals(HttpStatus.ACCEPTED, actual.getStatusCode());
     }
 
     @Test
     void getPersonas() {
-        List<Persona> actual = personaImagenService.getPersonas();
-        assertEquals(actual, Arrays.asList(persona));
-    }
+        ResponseEntity<Object> actual = personaImagenService.getPersonas();
+        assertEquals(HttpStatus.FOUND, actual.getStatusCode());
+        assertEquals("Optional[["+persona.toString()+"]])", actual.getBody().toString().split(", data=")[1]);
+        when(personaService.getPersonas()).thenReturn(Arrays.asList());
+        actual = personaImagenService.getPersonas();
+        assertEquals(actual.getStatusCode(), HttpStatus.NOT_FOUND);
 
+    }
     @Test
     void getPersonaById() {
-        Persona actual = personaImagenService.getPersonaById(persona.getId());
-        assertEquals(actual, persona);
-    }
 
+
+        ResponseEntity<Object> actual = personaImagenService.getPersonaById(persona.getId());
+        assertEquals("Optional["+persona.toString()+"])", actual.getBody().toString().split(", data=")[1]);
+        when(personaService.getPersonaById(persona.getId())).thenReturn(null);
+        actual = personaImagenService.getPersonaById(persona.getId());
+        assertEquals(actual.getStatusCode(), HttpStatus.NOT_FOUND);
+    }
     @Test
-    void getPersonaByName() {
-        Persona actual = personaImagenService.getPersonaByName(persona.getName());
+    void getPersonaByIdNum() {
+
+        Persona actual = personaImagenService.getPersonaByIdNum(persona.getIdNum());
         assertEquals(actual, persona);
     }
 
     @Test
     void deletePersona() {
-        int actual = personaImagenService.deletePersona(persona);
-        assertEquals(actual, 1);
+        ResponseEntity<Object> actual = personaImagenService.deletePersona(persona);
+        assertEquals(actual.getStatusCode(), HttpStatus.ACCEPTED);
+        when(personaService.getPersonaByIdNum(persona.getIdNum())).thenReturn(null);
+        actual = personaImagenService.deletePersona(persona);
+        assertEquals(actual.getStatusCode(), HttpStatus.NOT_ACCEPTABLE);
     }
 
     @Test
     void updatePersona() {
-        int actual = personaImagenService.updatePersona(form);
-        assertEquals(actual, 1);
+        ResponseEntity<Object> actual = personaImagenService.updatePersona(form);
+        assertEquals(actual.getStatusCode(), HttpStatus.ACCEPTED);
+        when(personaImagenService.getPersonaByIdNum(form.getIdNum())).thenReturn(null);
+        actual = personaImagenService.updatePersona(form);
+        assertEquals(actual.getStatusCode(), HttpStatus.NOT_ACCEPTABLE);
 
     }
-}
-*/
+
+    }

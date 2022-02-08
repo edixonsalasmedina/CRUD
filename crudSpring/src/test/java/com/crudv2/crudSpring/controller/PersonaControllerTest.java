@@ -1,10 +1,7 @@
-/*
+
 package com.crudv2.crudSpring.controller;
 
-import com.crudv2.crudSpring.entity.AnswerData;
-import com.crudv2.crudSpring.entity.Form;
-import com.crudv2.crudSpring.entity.Imagen;
-import com.crudv2.crudSpring.entity.Persona;
+import com.crudv2.crudSpring.entity.*;
 import com.crudv2.crudSpring.repository.ImagenRepository;
 import com.crudv2.crudSpring.repository.PersonaRepository;
 import com.crudv2.crudSpring.service.ImagenService;
@@ -19,6 +16,7 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -94,30 +92,35 @@ class PersonaControllerTest {
         when(personaService.updatePersona(persona)).thenReturn(persona);//--
         when(service.getPersonaByIdNum(form.getIdNum())).thenReturn(null);
         when(service.getPersonaByIdNum(form3.getIdNum())).thenReturn(persona3);
-        when(service.savePersona(form)).thenReturn(1);
+
 
     }
 
 
     @Test
     void addPersona() {
+        ResponseEntity<Object> res = ResponseEntity.status(HttpStatus.ACCEPTED).body(new AnswerNotData(HttpStatus.ACCEPTED, "Persona registrada correctamente"));
+        when(service.savePersona(form)).thenReturn(res);
+        when(service.savePersona(form3)).thenReturn(ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new AnswerNotData(HttpStatus.NOT_ACCEPTABLE, "Persona registrada correctamente")));
         assertEquals(202, personaController.addPersona(form).getStatusCodeValue());
         assertEquals(406, personaController.addPersona(form3).getStatusCodeValue());
     }
+
     @Test
     void findAllPersonas() {
-        when(service.getPersonas()).thenReturn(Arrays.asList());
+        when(service.getPersonas()).thenReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).body(new AnswerNotData(HttpStatus.NOT_FOUND, "No se " + "encontraron personas")));
         assertEquals(404, personaController.findAllPersonas().getStatusCodeValue());
-        when(service.getPersonas()).thenReturn(Arrays.asList(persona));
+        when(service.getPersonas()).thenReturn(ResponseEntity.status(HttpStatus.FOUND).body(new AnswerData(HttpStatus.FOUND, Optional.of(Arrays.asList(persona)))));
         assertEquals(302, personaController.findAllPersonas().getStatusCodeValue());
         //assertEquals( Arrays.asList(persona), personaController.findAllPersonas().getBody().data.get());
     }
 
     @Test
     void findPersonaById() {
-        when(service.getPersonaById(2)).thenReturn(null);
+        when(personaService.getPersonaById(2)).thenReturn(null);
+        when(service.getPersonaById(2)).thenReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).body(new AnswerNotData(HttpStatus.NOT_FOUND, "No se encontro a la persona")));
         assertEquals(404, personaController.findPersonaById(2).getStatusCodeValue());
-        when(service.getPersonaById(2)).thenReturn(persona);
+        when(service.getPersonaById(2)).thenReturn(ResponseEntity.status(HttpStatus.FOUND).body(new AnswerData(HttpStatus.FOUND, Optional.of(persona))));
         assertEquals(302, personaController.findPersonaById(2).getStatusCodeValue());
 
     }
@@ -125,24 +128,34 @@ class PersonaControllerTest {
     @Test
     void updatePersona() {
         when(service.getPersonaByIdNum(form.getIdNum())).thenReturn(persona);
-        when(service.updatePersona(form)).thenReturn(1);
+        when(service.updatePersona(form)).thenReturn(ResponseEntity.status(HttpStatus.ACCEPTED).body(new AnswerNotData(HttpStatus.ACCEPTED,
+                "Usuario actualizado correctamente")));
         assertEquals(202, personaController.updatePersona(form).getStatusCodeValue());
         when(service.getPersonaByIdNum(form.getIdNum())).thenReturn(persona3);
+        when(service.updatePersona(form)).thenReturn(ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new AnswerNotData(HttpStatus.NOT_ACCEPTABLE,
+                        "El numero de identificacion no coindice con el id de usuario")));
         assertEquals(406, personaController.updatePersona(form).getStatusCodeValue());
         when(service.getPersonaByIdNum(form.getIdNum())).thenReturn(null);
+        when(service.updatePersona(form)).thenReturn(ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new AnswerNotData(HttpStatus.NOT_ACCEPTABLE,
+                "Persona no esta registrada")));
         assertEquals(406, personaController.updatePersona(form).getStatusCodeValue());
     }
-
     @Test
     void deletePersona() {
         when(service.getPersonaByIdNum(persona.getIdNum())).thenReturn(persona);
-        when(service.deletePersona(persona)).thenReturn(1);
+        when(service.deletePersona(persona)).thenReturn(ResponseEntity.status(HttpStatus.ACCEPTED).body(new AnswerNotData(HttpStatus.ACCEPTED,
+                "Usuario eliminado correctamente")));
         assertEquals(202, personaController.deletePersona(persona).getStatusCodeValue());
         when(service.getPersonaByIdNum(persona.getIdNum())).thenReturn(persona3);
+        when(service.deletePersona(persona)).thenReturn(ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new AnswerNotData(HttpStatus.NOT_ACCEPTABLE,
+                "El numero de identificacion no coindice con el id de usuario")));
+
         assertEquals(406, personaController.deletePersona(persona).getStatusCodeValue());
         when(service.getPersonaByIdNum(persona.getIdNum())).thenReturn(null);
+        when(service.deletePersona(persona)).thenReturn(ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new AnswerNotData(HttpStatus.NOT_ACCEPTABLE,
+                        "Persona no existe")));
         assertEquals(406, personaController.deletePersona(persona).getStatusCodeValue());
     }
+
 }
 
- */

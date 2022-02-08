@@ -61,7 +61,7 @@ public class PersonaImagen {
     }
 
     public ResponseEntity<Object> getPersonaById(int id) {
-        Persona persona = personaService.getPersonaById(id);;
+        Persona persona = personaService.getPersonaById(id);
         ResponseEntity<Object> res;
         if(persona == null){
             res = ResponseEntity.status(HttpStatus.NOT_FOUND).body(new AnswerNotData(HttpStatus.NOT_FOUND, "No se encontro a la persona"));
@@ -71,9 +71,6 @@ public class PersonaImagen {
         return res;
     }
 
-    public Persona getPersonaByName(String name) {
-        return personaService.getPersonaByName(name);
-    }
 
 
     public Persona getPersonaByIdNum(String id) {

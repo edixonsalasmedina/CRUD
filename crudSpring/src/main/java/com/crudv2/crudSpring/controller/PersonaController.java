@@ -1,28 +1,24 @@
 package com.crudv2.crudSpring.controller;
 
 
+import com.crudv2.crudSpring.controllerAdvice.exceptions.ApiClienteInvalid;
 import com.crudv2.crudSpring.entity.AnswerData;
 import com.crudv2.crudSpring.entity.AnswerNotData;
 import com.crudv2.crudSpring.entity.Form;
 import com.crudv2.crudSpring.entity.Persona;
 import com.crudv2.crudSpring.service.PersonaImagen;
-import com.crudv2.crudSpring.service.PersonaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.modelmapper.ModelMapper;
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController
@@ -41,7 +37,7 @@ public class PersonaController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = AnswerNotData.class)) }) })
     @PostMapping("/addPersona")
-    public ResponseEntity<Object>  addPersona(@RequestBody Form form) {
+    public ResponseEntity<Object>  addPersona(@Valid @RequestBody Form form) {
         return service.savePersona(form);
     }
     @Operation(summary = "Listar todas las personas")
@@ -98,7 +94,7 @@ public class PersonaController {
 
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Object> deletePersona(@RequestBody Persona persona) {
+    public ResponseEntity<Object> deletePersona(@Valid @RequestBody Persona persona) {
         return service.deletePersona(persona);
     }
 }

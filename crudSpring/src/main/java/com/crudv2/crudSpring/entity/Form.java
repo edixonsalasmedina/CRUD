@@ -4,10 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Generated;
 import lombok.NoArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Data
@@ -36,6 +39,9 @@ public class Form {
     private String cityOfBirth;
     @NotBlank
     @Size(min = 10, max = 12)
+    @NotEmpty(message = "entry idNum")
+    @NotBlank
+    @NotNull
     private String idNum;
     @NotBlank
     private String imagen;
